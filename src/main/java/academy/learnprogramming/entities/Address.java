@@ -10,7 +10,16 @@ public class Address {
     private String city;
     private String country;
     private String phone;
+    private String state;
 
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getStreetAddress() {
         return streetAddress;

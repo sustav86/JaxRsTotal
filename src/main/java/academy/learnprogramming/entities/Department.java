@@ -9,7 +9,12 @@ import java.util.*;
 //        [WHERE <conditional_expression>]
 //        [ORDER BY <order_by_clause>]
 @Entity
-@NamedQuery(name = Department.GET_DEPARTMENT_LIST, query = "select d from Department  d")
+@NamedQuery(name = Department.GET_DEPARTMENT_LIST, query = "select d from Department d")
+
+
+
+
+
 @NamedQuery(name = Department.GET_DEPARTMENT_NAMES, query = "select d.departmentName from Department  d")
 @NamedQuery(name = Department.FIND_BY_ID, query = "select d from Department d where d.id = :id and d.userEmail = :email")
 @NamedQuery(name = Department.FIND_BY_NAME, query = "select d from Department d where d.departmentName = :name and d.userEmail = :email")
