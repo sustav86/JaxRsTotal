@@ -9,6 +9,9 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
@@ -90,7 +93,7 @@ public class QueryService {
     public Collection<Employee> getEmployeesByProject(Project project) {
 
 
-        return entityManager.createQuery("select e from Employee e where :project member of e.projects", Employee.class)
+        return entityManager.createQuery("select e from Employee e where :project member of e.projects order by e.department.departmentName desc ", Employee.class)
                 .setParameter("project", project).getResultList();
 
     }
@@ -101,18 +104,42 @@ public class QueryService {
     }
 
 
+    public Collection<Employee> filterEmployees(String pattern) {
+
+        return entityManager.createQuery("select e from Employee e where e.fullName LIKE :filter", Employee.class)
+                .setParameter("filter", pattern).getResultList();//jo% jonathan, joseph, joe
+    }
+
+
+//    public Collection<Employee> getEmployeesByBonus() {
+//        return entityManager.createQuery("select e, e.basicSalary * 0.15 as bonus from Employee e order by bonus ", Employee.class).getResultList();
+//    }
 
 
 
 
 
+    public Collection<Object[]> getTotalEmployeeSalariesByDept() {
+        TypedQuery<Object[]> query = entityManager.createQuery("select d.departmentName, sum(e.basicSalary) from Department d join d.employees e group by d.departmentName", Object[].class);
+        return query.getResultList();
+    }
 
+    public Collection<Object[]> getAverageEmployeeSalaryByDept() {
+        return entityManager.createQuery("select d.departmentName, avg(e.basicSalary) from Department d join d.employees e where e.subordinates is empty  group by d.departmentName", Object[].class).getResultList();
+    }
 
+    public Collection<Object[]> getAverageEmployeeSalaryByDept(BigDecimal minimumThreshold) {
+        return entityManager.createQuery("select d.departmentName, avg(e.basicSalary) from Department d join d.employees e where e.subordinates is empty  group by d.departmentName having avg(e.basicSalary) > :minThreshold", Object[].class)
+                .setParameter("minThreshold",minimumThreshold ).getResultList();
+    }
 
+    public Collection<Object[]> countEmployeesByDept() {
+        return entityManager.createQuery("select d.departmentName, count(e) from Department d join d.employees e group by d.departmentName", Object[].class).getResultList();
+    }
 
-
-
-
+    public Collection<Object[]> getEmployeesLowestByDept() {
+        return entityManager.createQuery("select d.departmentName, max (e.basicSalary) from Department d join d.employees e group by d.departmentName", Object[].class).getResultList();
+    }
 
 
     public Department findDepartmentById(Long id) {
@@ -130,5 +157,22 @@ public class QueryService {
 
     public List<Department> getDepartments() {
         return null;
+    }
+
+
+
+
+    public Collection<Employee> bla() {
+
+        //select e from Employee e where e.fullName = 'Average Joe'
+
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Employee> c = cb.createQuery(Employee.class);
+        Root<Employee> emp = c.from(Employee.class);
+        CriteriaQuery<Employee> query = c.select(emp)
+                .where(cb.equal(emp.get("fullName"), "Average Joe"));
+
+       return entityManager.createQuery(query).getResultList();
     }
 }

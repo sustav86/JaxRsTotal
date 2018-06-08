@@ -10,11 +10,6 @@ import java.util.*;
 //        [ORDER BY <order_by_clause>]
 @Entity
 @NamedQuery(name = Department.GET_DEPARTMENT_LIST, query = "select d from Department d")
-
-
-
-
-
 @NamedQuery(name = Department.GET_DEPARTMENT_NAMES, query = "select d.departmentName from Department  d")
 @NamedQuery(name = Department.FIND_BY_ID, query = "select d from Department d where d.id = :id and d.userEmail = :email")
 @NamedQuery(name = Department.FIND_BY_NAME, query = "select d from Department d where d.departmentName = :name and d.userEmail = :email")
@@ -35,15 +30,15 @@ public class Department extends AbstractEntity {
     @NotEmpty(message = "Department name must be set")
     private String departmentName;
 
-//    @OneToMany(mappedBy = "department")
-//    @OrderBy("fullName ASC, dateOfBirth desc ")
-//    @OrderColumn(name = "EMPLOYEE_POSITION")
-//    private List<Employee> employees = new ArrayList<>();
+    @OneToMany(mappedBy = "department")
+    @OrderBy("fullName ASC, dateOfBirth desc ")
+    @OrderColumn(name = "EMPLOYEE_POSITION")
+    private List<Employee> employees = new ArrayList<>();
 
-    @OneToMany
-    @MapKey(name = "id")
-    @JoinTable(name = "DEPT_EMPLOYEES")
-    private Map<Long, Employee> employees = new HashMap<>();
+//    @OneToMany
+//    @MapKey(name = "id")
+//    @JoinTable(name = "DEPT_EMPLOYEES")
+//    private Map<Long, Employee> employees = new HashMap<>();
 
 
     @ElementCollection
@@ -72,13 +67,13 @@ public class Department extends AbstractEntity {
         this.departmentName = departmentName;
     }
 
-    public Map<Long, Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(Map<Long, Employee> employees) {
-        this.employees = employees;
-    }
+//    public Map<Long, Employee> getEmployees() {
+//        return employees;
+//    }
+//
+//    public void setEmployees(Map<Long, Employee> employees) {
+//        this.employees = employees;
+//    }
 
     public Map<Employee, Integer> getEmployeeRanks() {
         return employeeRanks;
@@ -88,11 +83,11 @@ public class Department extends AbstractEntity {
         this.employeeRanks = employeeRanks;
     }
 
-    //    public List<Employee> getEmployees() {
-//        return employees;
-//    }
-//
-//    public void setEmployees(List<Employee> employees) {
-//        this.employees = employees;
-//    }
+        public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
 }
