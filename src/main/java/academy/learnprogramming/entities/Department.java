@@ -1,7 +1,10 @@
 package academy.learnprogramming.entities;
 
+import academy.learnprogramming.config.AbstractEntityListener;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.util.*;
 
 //SELECT <select_expression>
@@ -15,6 +18,7 @@ import java.util.*;
 @NamedQuery(name = Department.FIND_BY_NAME, query = "select d from Department d where d.departmentName = :name and d.userEmail = :email")
 @NamedQuery(name = Department.LIST_DEPARTMENTS, query = "select d from Department d where  d.userEmail = :email")
 @Access(AccessType.FIELD)
+@EntityListeners({AbstractEntityListener.class})
 public class Department extends AbstractEntity {
 
     public static final String FIND_BY_ID = "Department.findById";
@@ -28,7 +32,8 @@ public class Department extends AbstractEntity {
 
 
     @NotEmpty(message = "Department name must be set")
-    private String departmentName;
+    @Pattern(regexp = "", message = "Department must be in form dept abbreviation, number and branch. Eg FIN0011MAIN")
+    private String departmentName; //FIN0011MAIN
 
     @OneToMany(mappedBy = "department")
     @OrderBy("fullName ASC, dateOfBirth desc ")
