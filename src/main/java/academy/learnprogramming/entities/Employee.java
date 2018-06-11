@@ -65,6 +65,9 @@ public class Employee extends AbstractEntity{
     @Basic
     private String fullName;
 
+    @NotEmpty(message = "Social security number must be set")
+    private String socialSecurityNumber;
+
     @NotNull(message = "Date of birth must be set")
     @Past(message = "Date of birth must be in the past")
     @JsonbDateFormat(value = "yyyy-MM-dd")
@@ -148,6 +151,15 @@ public class Employee extends AbstractEntity{
 //    private void init() {
 //        this.age = Period.between(dateOfBirth, LocalDate.now()).getYears();
 //    }
+
+
+    public String getSocialSecurityNumber() {
+        return socialSecurityNumber;
+    }
+
+    public void setSocialSecurityNumber(String socialSecurityNumber) {
+        this.socialSecurityNumber = socialSecurityNumber;
+    }
 
     public void setAge(int age) {
         this.age = age;
@@ -299,5 +311,20 @@ public class Employee extends AbstractEntity{
 
     public void setBasicSalary(BigDecimal basicSalary) {
         this.basicSalary = basicSalary;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(getSocialSecurityNumber().toUpperCase(), employee.getSocialSecurityNumber().toUpperCase());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getSocialSecurityNumber().toUpperCase());
     }
 }
