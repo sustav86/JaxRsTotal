@@ -21,16 +21,13 @@ import javax.validation.constraints.*;
  */
 @Entity
 
+
+@NamedNativeQuery(name = "Employee.findAllNativeNamed", query = "select * from Employee", resultClass = Employee.class)
+
 @NamedQuery(name = Employee.GET_EMPLOYEE_ALLOWANCES, query = "select al from Employee  e join e.employeeAllowances al where al.allowanceAmount > :greaterThanValue")
-
 @NamedQuery(name = Employee.EMPLOYEE_SALARY_BOUND, query = "select e from Employee e where e.basicSalary between :lowerBound and :upperBound")
-
-
-
 @NamedQuery(name = "", query = "select e.fullName, KEY(p), VALUE(p) from Employee e join e.employeePhoneNumbers p")
-
 @NamedQuery(name = "", query = "select e from Employee e join fetch e.employeeAllowances")
-
 @NamedQuery(name = Employee.GET_ALL_PARKING_SPACES, query = "select e.parkingSpace from Employee e")
 @NamedQuery(name = Employee.EMPLOYEE_PROJECTION, query = "select e.fullName, e.basicSalary from Employee e")
 @NamedQuery(name = Employee.EMPLOYEE_CONSTRUCTOR_PROJ, query = "select new academy.learnprogramming.entities.EmployeeDetails(e.fullName, e.basicSalary, e.department.departmentName) from Employee  e")

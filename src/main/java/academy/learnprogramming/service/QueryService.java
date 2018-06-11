@@ -6,6 +6,8 @@ import academy.learnprogramming.entities.*;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -72,7 +74,7 @@ public class QueryService {
     }
 
     public Employee getEmployeeWithHighestSalary() {
-       return entityManager.createQuery("select e from Employee e where e.basicSalary = (select max(emp.basicSalary) from Employee emp)", Employee.class)
+        return entityManager.createQuery("select e from Employee e where e.basicSalary = (select max(emp.basicSalary) from Employee emp)", Employee.class)
                 .getSingleResult();
     }
 
@@ -81,7 +83,6 @@ public class QueryService {
         return entityManager.createQuery("select e from Employee e where e.address.state in ('NY', 'CA')", Employee.class)
                 .getResultList();
     }
-
 
 
     public Collection<Employee> getManagers() {
@@ -116,9 +117,6 @@ public class QueryService {
 //    }
 
 
-
-
-
     public Collection<Object[]> getTotalEmployeeSalariesByDept() {
         TypedQuery<Object[]> query = entityManager.createQuery("select d.departmentName, sum(e.basicSalary) from Department d join d.employees e group by d.departmentName", Object[].class);
         return query.getResultList();
@@ -130,7 +128,7 @@ public class QueryService {
 
     public Collection<Object[]> getAverageEmployeeSalaryByDept(BigDecimal minimumThreshold) {
         return entityManager.createQuery("select d.departmentName, avg(e.basicSalary) from Department d join d.employees e where e.subordinates is empty  group by d.departmentName having avg(e.basicSalary) > :minThreshold", Object[].class)
-                .setParameter("minThreshold",minimumThreshold ).getResultList();
+                .setParameter("minThreshold", minimumThreshold).getResultList();
     }
 
     public Collection<Object[]> countEmployeesByDept() {
@@ -160,8 +158,6 @@ public class QueryService {
     }
 
 
-
-
     public Collection<Employee> bla() {
 
         //select e from Employee e where e.fullName = 'Average Joe'
@@ -173,6 +169,16 @@ public class QueryService {
         CriteriaQuery<Employee> query = c.select(emp)
                 .where(cb.equal(emp.get("fullName"), "Average Joe"));
 
-       return entityManager.createQuery(query).getResultList();
+        return entityManager.createQuery(query).getResultList();
+    }
+
+
+    public Collection<Employee> findAllEmployeesNamedNative() {
+        return entityManager.createNamedQuery("Employee.findAllNativeNamed", Employee.class).getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    public Collection<Department> getDepartmentsNativeQuery() {
+        return entityManager.createNativeQuery("select * from Department", Department.class).getResultList();
     }
 }
