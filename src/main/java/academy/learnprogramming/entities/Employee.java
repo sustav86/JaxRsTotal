@@ -26,8 +26,8 @@ import javax.validation.constraints.*;
 
 @NamedQuery(name = Employee.GET_EMPLOYEE_ALLOWANCES, query = "select al from Employee  e join e.employeeAllowances al where al.allowanceAmount > :greaterThanValue")
 @NamedQuery(name = Employee.EMPLOYEE_SALARY_BOUND, query = "select e from Employee e where e.basicSalary between :lowerBound and :upperBound")
-@NamedQuery(name = "", query = "select e.fullName, KEY(p), VALUE(p) from Employee e join e.employeePhoneNumbers p")
-@NamedQuery(name = "", query = "select e from Employee e join fetch e.employeeAllowances")
+@NamedQuery(name = Employee.GET_EMPLOYEE_PHONE_NUMBERS, query = "select e.fullName, KEY(p), VALUE(p) from Employee e join e.employeePhoneNumbers p")
+@NamedQuery(name = Employee.GET_EMPLOYEE_ALLOWANCES_JOIN_FETCH, query = "select e from Employee e join fetch e.employeeAllowances")
 @NamedQuery(name = Employee.GET_ALL_PARKING_SPACES, query = "select e.parkingSpace from Employee e")
 @NamedQuery(name = Employee.EMPLOYEE_PROJECTION, query = "select e.fullName, e.basicSalary from Employee e")
 @NamedQuery(name = Employee.EMPLOYEE_CONSTRUCTOR_PROJ, query = "select new academy.learnprogramming.entities.EmployeeDetails(e.fullName, e.basicSalary, e.department.departmentName) from Employee  e")
@@ -53,12 +53,16 @@ public class Employee extends AbstractEntity{
     public static final String EMPLOYEE_PROJECTION = "Employee.nameAndSalaryProjection";
     public static final String EMPLOYEE_CONSTRUCTOR_PROJ = "Employee.projection";
     public static final String GET_EMPLOYEE_ALLOWANCES = "Employee.getAllowances";
+    public static final String GET_EMPLOYEE_ALLOWANCES_JOIN_FETCH = "Employee.getAllowancesJoinFetch";
     public static final String FIND_BY_ID = "Employee.findById";
     public static final String FIND_BY_NAME = "Employee.findByName";
     public static final String LIST_EMPLOYEES = "Employee.listEmployees";
     public static final String FIND_PAST_PAYSLIP_BY_ID = "Employee.findPastPayslipById";
     public static final String GET_PAST_PAYSLIPS = "Employee.getPastPayslips";
     public static final String GET_ALL_PARKING_SPACES = "Employee.getAllParkingSpaces";
+    public static final String GET_EMPLOYEE_PHONE_NUMBERS = "Employee.getPhoneNumbers";
+
+
 
     @NotEmpty(message = "Name cannot be empty")
     @Size(max = 40, message = "Full name must be less than 40 charaters")
