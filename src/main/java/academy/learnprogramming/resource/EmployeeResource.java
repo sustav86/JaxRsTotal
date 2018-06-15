@@ -3,25 +3,14 @@ package academy.learnprogramming.resource;
 import academy.learnprogramming.entities.Employee;
 import academy.learnprogramming.service.PersistenceService;
 import academy.learnprogramming.service.QueryService;
-import sun.management.Agent;
-import sun.net.www.content.text.plain;
 
 import javax.inject.Inject;
-import javax.persistence.spi.PersistenceProvider;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.xml.registry.infomodel.User;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
+import javax.ws.rs.*;
 import java.util.Collection;
-import java.util.List;
 
 @Path("employees") //api/v1/employees/*
 @Produces("application/json")
+@Consumes("application/json")
 public class EmployeeResource {
 
 
@@ -68,14 +57,23 @@ public class EmployeeResource {
     }
 
     @GET
-    @Path("employee") //api/v1/employees/employee  GET Method
-    public Employee getEmployeeById(Long id) {
+    @Path("employee/{id: ^[0-9]+$}") //api/v1/employees/employee/1  GET Method {username: }@{domain: }.{company}
+    public Employee getEmployeeById(@PathParam("id") @DefaultValue("0") Long id) {
+
         return queryService.findEmployeeById(id);
+    }
+
+    @GET
+    @Path("id") //?id=27 /id?id=95
+    public Employee findEmployeeById(@QueryParam("id") @DefaultValue("0") Long id) {
+        return queryService.findEmployeeById(id);
+
     }
 
 
     @POST //api/v1/employees POST Request
     @Path("new") //api/v1/employees/new - POST Request
+//    @Consumes("application/xml")
     public void createEmployee(Employee employee) {
         persistenceService.saveEmployee(employee );
     }
