@@ -3,9 +3,14 @@ package academy.learnprogramming.resource;
 import academy.learnprogramming.entities.Employee;
 import academy.learnprogramming.service.PersistenceService;
 import academy.learnprogramming.service.QueryService;
+import javafx.scene.media.MediaPlayer;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.Collection;
 
 @Path("employees") //api/v1/employees/*
@@ -13,6 +18,13 @@ import java.util.Collection;
 @Consumes("application/json")
 public class EmployeeResource {
 
+
+    @Context
+    private UriInfo uriInfo;
+
+    //employees GET List of employees
+    //employees/{id} GET
+    //employees POST - employees/98
 
     @Inject
     QueryService queryService;
@@ -29,7 +41,7 @@ public class EmployeeResource {
     @GET //api/v1/employees GET Request
     @Path("employees") //api/v1/employees/employees
 //    @Produces("application/xml")
-    public Collection<Employee> getEmployees() {
+    public Response getEmployees() {
 
 //        Collection<Employee> employees = new ArrayList<>();
 //
@@ -51,16 +63,16 @@ public class EmployeeResource {
 //        employees.add(employee);
 //        employees.add(employee1);
 
+        return Response.ok(queryService.getEmployees()).status(Response.Status.OK).build();
 
-       return queryService.getEmployees();
 //        return employees;
     }
 
     @GET
-    @Path("employee/{id: ^[0-9]+$}") //api/v1/employees/employee/1  GET Method {username: }@{domain: }.{company}
-    public Employee getEmployeeById(@PathParam("id") @DefaultValue("0") Long id) {
+    @Path("employees/{id: \\d+}") //api/v1/employees/employee/1  GET Method {username: }@{domain: }.{company}
+    public Response getEmployeeById(@PathParam("id") @DefaultValue("0") Long id) {
 
-        return queryService.findEmployeeById(id);
+        return Response.ok(queryService.findEmployeeById(id)).status(Response.Status.OK).build();
     }
 
     @GET
@@ -72,9 +84,12 @@ public class EmployeeResource {
 
 
     @POST //api/v1/employees POST Request
-    @Path("new") //api/v1/employees/new - POST Request
+    @Path("employees") //api/v1/employees/new - POST Request
 //    @Consumes("application/xml")
-    public void createEmployee(Employee employee) {
+    public Response createEmployee(Employee employee) {
         persistenceService.saveEmployee(employee );
+
+        URI uri = uriInfo.getAbsolutePathBuilder().path(employee.getId().toString()).build();
+        return Response.created(uri).status(Response.Status.CREATED).build();
     }
 }

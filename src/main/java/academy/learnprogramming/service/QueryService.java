@@ -149,7 +149,7 @@ public class QueryService {
     }
 
     public List<Employee> getEmployees() {
-        return null;
+        return entityManager.createNamedQuery(Employee.LIST_EMPLOYEES, Employee.class).getResultList();
     }
 
 
