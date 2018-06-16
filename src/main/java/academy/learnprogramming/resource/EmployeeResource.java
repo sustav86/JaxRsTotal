@@ -6,6 +6,7 @@ import academy.learnprogramming.service.QueryService;
 import javafx.scene.media.MediaPlayer;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -86,7 +87,7 @@ public class EmployeeResource {
     @POST //api/v1/employees POST Request
     @Path("employees") //api/v1/employees/new - POST Request
 //    @Consumes("application/xml")
-    public Response createEmployee(Employee employee) {
+    public Response createEmployee(@Valid  Employee employee) {
         persistenceService.saveEmployee(employee );
 
         URI uri = uriInfo.getAbsolutePathBuilder().path(employee.getId().toString()).build();
