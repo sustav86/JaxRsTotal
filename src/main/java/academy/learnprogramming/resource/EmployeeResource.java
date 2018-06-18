@@ -3,16 +3,14 @@ package academy.learnprogramming.resource;
 import academy.learnprogramming.entities.Employee;
 import academy.learnprogramming.service.PersistenceService;
 import academy.learnprogramming.service.QueryService;
-import javafx.scene.media.MediaPlayer;
+import sun.misc.Cache;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
-import java.util.Collection;
+import java.util.UUID;
 
 @Path("employees") //api/v1/employees/*
 @Produces("application/json")
@@ -42,7 +40,7 @@ public class EmployeeResource {
     @GET //api/v1/employees GET Request
     @Path("employees") //api/v1/employees/employees
 //    @Produces("application/xml")
-    public Response getEmployees() {
+    public Response getEmployees(@Context HttpHeaders httpHeaders) {
 
 //        Collection<Employee> employees = new ArrayList<>();
 //
@@ -63,17 +61,36 @@ public class EmployeeResource {
 //
 //        employees.add(employee);
 //        employees.add(employee1);
+        MediaType mediaType = httpHeaders.getAcceptableMediaTypes().get(0);
 
-        return Response.ok(queryService.getEmployees()).status(Response.Status.OK).build();
+        return Response.ok(queryService.getEmployees(), mediaType).status(Response.Status.OK).build();
 
 //        return employees;
     }
 
     @GET
     @Path("employees/{id: \\d+}") //api/v1/employees/employee/1  GET Method {username: }@{domain: }.{company}
-    public Response getEmployeeById(@PathParam("id") @DefaultValue("0") Long id) {
+    public Response getEmployeeById(@PathParam("id") @DefaultValue("0") Long id, @Context Request request) {
+        Employee employee = queryService.findEmployeeById(id);
 
-        return Response.ok(queryService.findEmployeeById(id)).status(Response.Status.OK).build();
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(1000);
+
+        EntityTag entityTag = new EntityTag(UUID.randomUUID().toString());
+
+        Response.ResponseBuilder responseBuilder = request.evaluatePreconditions(entityTag);
+
+        if (responseBuilder != null) {
+            responseBuilder.cacheControl(cacheControl);
+            return responseBuilder.build();
+
+        }
+        responseBuilder = Response.ok(employee);
+        responseBuilder.tag(entityTag);
+        responseBuilder.cacheControl(cacheControl);
+        return responseBuilder.build();
+
+//        return Response.ok().status(Response.Status.OK).build();
     }
 
     @GET
