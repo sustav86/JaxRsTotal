@@ -47,7 +47,13 @@ public class PersistenceService {
     }
 
     public void saveEmployee(Employee employee) {
-        entityManager.persist(employee);
+
+        if (employee.getId() == null) {
+
+            entityManager.persist(employee);
+        } else {
+            entityManager.merge(employee);
+        }
     }
     public void updateDepartment(Department department) {
         entityManager.merge(department);
