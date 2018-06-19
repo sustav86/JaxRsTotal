@@ -164,4 +164,12 @@ public class EmployeeResource {
         return Response.noContent().build();
     }
 
+
+    @DELETE
+    @Path("{id: \\d+}") //api/v1/employees/34 - DELETE
+    public Response terminateEmployee(@PathParam("id") @NotNull Long id) {
+
+        return Response.ok().build();
+    }
+
 }
