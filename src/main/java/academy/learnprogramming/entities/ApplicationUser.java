@@ -1,6 +1,8 @@
 package academy.learnprogramming.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -8,8 +10,10 @@ import javax.validation.constraints.Size;
 import javax.ws.rs.FormParam;
 
 @Entity
+@NamedQuery(name = ApplicationUser.FIND_USER_BY_CREDENTIALS, query = "select u from ApplicationUser  u where u.password = :encryptedPassword and u.email = :email")
 public class ApplicationUser extends AbstractEntity{
 
+    public static final String FIND_USER_BY_CREDENTIALS = "User.findUserByCredentials";
 //    @SequenceGenerator(name = "User_seq", sequenceName = "User_sequence")
 //    @GeneratedValue(generator = "User_seq")
 //    @Id
@@ -31,6 +35,7 @@ public class ApplicationUser extends AbstractEntity{
     @Size(min = 8, max = 100)
 //    @Pattern(regexp = "", message = "Password must be in the form....")
     @FormParam("password")
+    @Column(length = 600)
     private String password;
 
 

@@ -1,5 +1,6 @@
 package academy.learnprogramming.service;
 
+import academy.learnprogramming.entities.ApplicationUser;
 import academy.learnprogramming.entities.Employee;
 import academy.learnprogramming.entities.Department;
 import academy.learnprogramming.entities.ParkingSpace;
@@ -24,6 +25,9 @@ public class PersistenceService {
 
     @Inject
     QueryService queryService;
+
+    @Inject
+    SecurityUtil securityUtil;
 
     public void saveDepartment(Department department) {
         entityManager.persist(department);
@@ -53,6 +57,17 @@ public class PersistenceService {
             entityManager.persist(employee);
         } else {
             entityManager.merge(employee);
+        }
+    }
+
+    public void saveUser(ApplicationUser applicationUser) {
+
+        applicationUser.setPassword(securityUtil.encryptText(applicationUser.getPassword()));
+        if (applicationUser.getId() == null) {
+            entityManager.persist(applicationUser);
+
+        } else {
+            entityManager.merge(applicationUser);
         }
     }
     public void updateDepartment(Department department) {

@@ -1,5 +1,6 @@
 package academy.learnprogramming.resource;
 
+import academy.learnprogramming.config.Secure;
 import academy.learnprogramming.entities.Employee;
 import academy.learnprogramming.service.PersistenceService;
 import academy.learnprogramming.service.QueryService;
@@ -49,6 +50,7 @@ public class EmployeeResource {
     @GET //api/v1/employees GET Request
     @Path("employees") //api/v1/employees/employees
 //    @Produces("application/xml")
+    @Secure
     public Response getEmployees(@Context HttpHeaders httpHeaders) {
 
 //        Collection<Employee> employees = new ArrayList<>();
@@ -70,9 +72,9 @@ public class EmployeeResource {
 //
 //        employees.add(employee);
 //        employees.add(employee1);
-        MediaType mediaType = httpHeaders.getAcceptableMediaTypes().get(0);
+//        MediaType mediaType = httpHeaders.getAcceptableMediaTypes().get(0);
 
-        return Response.ok(queryService.getEmployees(), mediaType).status(Response.Status.OK).build();
+        return Response.ok(queryService.getEmployees()).status(Response.Status.OK).build();
 
 //        return employees;
     }
