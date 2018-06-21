@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 import javax.ws.rs.FormParam;
 
 @Entity
-@NamedQuery(name = ApplicationUser.FIND_USER_BY_CREDENTIALS, query = "select u from ApplicationUser  u where u.password = :encryptedPassword and u.email = :email")
+@NamedQuery(name = ApplicationUser.FIND_USER_BY_CREDENTIALS, query = "select u from ApplicationUser  u where  u.email = :email")
 public class ApplicationUser extends AbstractEntity{
 
     public static final String FIND_USER_BY_CREDENTIALS = "User.findUserByCredentials";
@@ -32,12 +32,20 @@ public class ApplicationUser extends AbstractEntity{
 
 
     @NotEmpty(message = "Email must be set")
-    @Size(min = 8, max = 100)
+    @Size(min = 8)
 //    @Pattern(regexp = "", message = "Password must be in the form....")
     @FormParam("password")
-    @Column(length = 600)
     private String password;
 
+    private String salt;
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
 
     public Long getId() {
         return id;

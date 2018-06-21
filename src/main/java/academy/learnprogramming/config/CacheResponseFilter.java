@@ -9,7 +9,7 @@ import java.io.IOException;
 
 
 
-@Provider
+//@Provider
 public class CacheResponseFilter implements ContainerResponseFilter {
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {

@@ -4,11 +4,14 @@ import academy.learnprogramming.entities.ApplicationUser;
 import academy.learnprogramming.entities.Employee;
 import academy.learnprogramming.entities.Department;
 import academy.learnprogramming.entities.ParkingSpace;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 
 import javax.annotation.sql.DataSourceDefinition;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.net.UnknownServiceException;
+import java.util.Map;
 
 
 @DataSourceDefinition(
@@ -62,13 +65,21 @@ public class PersistenceService {
 
     public void saveUser(ApplicationUser applicationUser) {
 
-        applicationUser.setPassword(securityUtil.encryptText(applicationUser.getPassword()));
+        Map<String, String> credMap = securityUtil.hashPassword(applicationUser.getPassword());
+
+        applicationUser.setPassword(credMap.get("hashedPassword"));
+        applicationUser.setSalt(credMap.get("salt"));
+
+
         if (applicationUser.getId() == null) {
             entityManager.persist(applicationUser);
 
         } else {
             entityManager.merge(applicationUser);
         }
+
+        credMap = null;
+
     }
     public void updateDepartment(Department department) {
         entityManager.merge(department);

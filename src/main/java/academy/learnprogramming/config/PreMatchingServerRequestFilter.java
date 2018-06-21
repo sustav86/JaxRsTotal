@@ -17,8 +17,8 @@ import java.security.Key;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//@Provider
-//@PreMatching
+@Provider
+@PreMatching
 public class PreMatchingServerRequestFilter implements ContainerRequestFilter {
 
     @Inject

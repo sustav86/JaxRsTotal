@@ -1,7 +1,6 @@
 package academy.learnprogramming.resource;
 
 import academy.learnprogramming.entities.ApplicationUser;
-import academy.learnprogramming.entities.Employee;
 import academy.learnprogramming.service.PersistenceService;
 import academy.learnprogramming.service.SecurityUtil;
 import io.jsonwebtoken.Jwts;
@@ -9,13 +8,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import javax.xml.registry.infomodel.User;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +22,7 @@ import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 @Path("users")
 @Consumes("application/json")
-//@Produces("application/json")
+@Produces("application/json")
 public class UsersResource {
 
     @Inject
@@ -62,13 +60,12 @@ public class UsersResource {
     @POST
     @Path("login")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response login(@FormParam("email") String email, @FormParam("password") String password) {
-        try {
+    public Response login(@FormParam("email") @NotEmpty(message = "Email must be set") String email,
+                          @NotEmpty(message = "Password must be set") @FormParam("password") String password) {
 
 
-            ApplicationUser applicationUser = securityUtil.authenticateUser(email, password);
 
-            if (applicationUser == null) {
+            if (!securityUtil.authenticateUser(email, password)) {
                 throw new SecurityException("Email or password incorrect");
             }
 
@@ -76,10 +73,7 @@ public class UsersResource {
 
             return Response.ok().header(AUTHORIZATION, "Bearer " + token).build();
 
-        } catch (Exception e) {
-            return Response.status(UNAUTHORIZED).build();
         }
-    }
 
 
     @POST
@@ -121,7 +115,7 @@ public class UsersResource {
     public Response getUserById(@PathParam("id") Long id) {
 
 
-        return null;
+        return Response.ok().status(Response.Status.OK).build();
     }
 
     private String getToken(String email, String password) {

@@ -184,11 +184,15 @@ public class QueryService {
     }
 
 
+    public boolean authenticateUser(String email, String plainTextPassword) {
 
-    public ApplicationUser findUserByCredentials(String email, String plainTextPassword) {
+        ApplicationUser user = entityManager.createNamedQuery(ApplicationUser.FIND_USER_BY_CREDENTIALS, ApplicationUser.class)
+                .setParameter("email", email.toLowerCase()).getResultList().get(0);
 
-        return entityManager.createNamedQuery(ApplicationUser.FIND_USER_BY_CREDENTIALS, ApplicationUser.class)
-                .setParameter("encryptedPassword", securityUtil.encryptText(plainTextPassword))
-                .setParameter("email", email).getResultList().get(0);
+        if (user != null) {
+            return securityUtil.passwordsMatch(user.getPassword(), user.getSalt(), plainTextPassword);
+        }
+        return false;
+
     }
 }
