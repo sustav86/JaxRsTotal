@@ -18,7 +18,7 @@ public class PayrollService {
     public void computePayroll() {
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(7000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
