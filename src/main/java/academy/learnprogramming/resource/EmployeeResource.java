@@ -14,9 +14,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -53,28 +58,29 @@ public class EmployeeResource {
     @Secure
     public Response getEmployees(@Context HttpHeaders httpHeaders) {
 
-//        Collection<Employee> employees = new ArrayList<>();
-//
-//        Employee employee = new Employee();
-//        employee.setFullName("John Mahama");
-//        employee.setSocialSecurityNumber("SSF12343");
-//        employee.setDateOfBirth(LocalDate.of(1986, Month.APRIL, 10));
-//        employee.setBasicSalary(new BigDecimal(60909));
-//        employee.setHiredDate(LocalDate.of(2018, Month.JANUARY, 24));
-//
-//
-//        Employee employee1 = new Employee();
-//        employee1.setFullName("Donald Trump");
-//        employee1.setSocialSecurityNumber("SKJBHJSBDKJ");
-//        employee1.setDateOfBirth(LocalDate.of(1900, Month.JULY, 31));
-//        employee1.setBasicSalary(new BigDecimal(250000));
-//        employee1.setHiredDate(LocalDate.of(2016, Month.NOVEMBER, 7));
-//
-//        employees.add(employee);
-//        employees.add(employee1);
+        Collection<Employee> employees = new ArrayList<>();
+
+        Employee employee = new Employee();
+        employee.setFullName("John Mahama");
+        employee.setSocialSecurityNumber("SSF12343");
+        employee.setDateOfBirth(LocalDate.of(1986, Month.APRIL, 10));
+        employee.setBasicSalary(new BigDecimal(60909));
+        employee.setHiredDate(LocalDate.of(2018, Month.JANUARY, 24));
+
+
+        Employee employee1 = new Employee();
+        employee1.setFullName("Donald Trump");
+        employee1.setSocialSecurityNumber("SKJBHJSBDKJ");
+        employee1.setDateOfBirth(LocalDate.of(1900, Month.JULY, 31));
+        employee1.setBasicSalary(new BigDecimal(250000));
+        employee1.setHiredDate(LocalDate.of(2016, Month.NOVEMBER, 7));
+
+        employees.add(employee);
+        employees.add(employee1);
 //        MediaType mediaType = httpHeaders.getAcceptableMediaTypes().get(0);
 
-        return Response.ok(queryService.getEmployees()).status(Response.Status.OK).build();
+        return Response.ok(employees).status(Response.Status.OK).build();
+
 
 //        return employees;
     }

@@ -12,6 +12,7 @@ import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Sha512Hash;
 import org.apache.shiro.util.ByteSource;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.sound.midi.Soundbank;
@@ -39,10 +40,10 @@ public class SecurityUtil {
 //        return passwordService.passwordsMatch(plainTextPassword, encryptedPassword);
 //    }
 
-    public Key generateKey() {
-        AesCipherService cipher = new AesCipherService();
+    public Key generateKey(String keyString) {
 
-        return cipher.generateNewKey(256);
+
+         return new SecretKeySpec(keyString.getBytes(), 0, keyString.getBytes().length, "DES");
 
     }
 

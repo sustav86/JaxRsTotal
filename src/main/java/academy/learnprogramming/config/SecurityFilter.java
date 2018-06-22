@@ -1,6 +1,7 @@
 package academy.learnprogramming.config;
 
 
+import academy.learnprogramming.service.ApplicationState;
 import academy.learnprogramming.service.SecurityUtil;
 import io.jsonwebtoken.Jwts;
 
@@ -30,6 +31,9 @@ public class SecurityFilter implements ContainerRequestFilter {
     private Logger logger;
 
     @Inject
+    ApplicationState applicationState;
+
+    @Inject
     private SecurityUtil securityUtil;
 //    @Inject
 //    private MySessionStore sessionStore;
@@ -50,7 +54,7 @@ public class SecurityFilter implements ContainerRequestFilter {
 
         //2. Parse the token
         try {
-            Key key = securityUtil.generateKey();
+            Key key = securityUtil.generateKey(applicationState.getEmail());
             Jwts.parser().setSigningKey(key).parseClaimsJws(token);
             SecurityContext securityContext = reqCtx.getSecurityContext();
             reqCtx.setSecurityContext(new SecurityContext() {
@@ -79,7 +83,7 @@ public class SecurityFilter implements ContainerRequestFilter {
 
             //3. If parsing fails, yell.
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Invalid{0} ", token);
+            logger.log(Level.SEVERE, "Invalid {0}", token);
             //Another way to send exceptions to the client
             reqCtx.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }

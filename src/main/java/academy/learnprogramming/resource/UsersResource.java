@@ -1,11 +1,13 @@
 package academy.learnprogramming.resource;
 
 import academy.learnprogramming.entities.ApplicationUser;
+import academy.learnprogramming.service.ApplicationState;
 import academy.learnprogramming.service.PersistenceService;
 import academy.learnprogramming.service.SecurityUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -23,8 +25,11 @@ import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 @Path("users")
 @Consumes("application/json")
 @Produces("application/json")
+@RequestScoped
 public class UsersResource {
 
+    @Inject
+    ApplicationState applicationState;
     @Inject
     private SecurityUtil securityUtil;
 
@@ -68,8 +73,8 @@ public class UsersResource {
             if (!securityUtil.authenticateUser(email, password)) {
                 throw new SecurityException("Email or password incorrect");
             }
-
-            String token = getToken(email, password);
+            applicationState.setEmail(email);
+            String token = getToken(email);
 
             return Response.ok().header(AUTHORIZATION, "Bearer " + token).build();
 
@@ -118,8 +123,8 @@ public class UsersResource {
         return Response.ok().status(Response.Status.OK).build();
     }
 
-    private String getToken(String email, String password) {
-        Key key = securityUtil.generateKey();
+    private String getToken(String email) {
+        Key key = securityUtil.generateKey(email);
 
 
         String token = Jwts.builder().setSubject(email).setIssuer(uriInfo.getAbsolutePath().toString())
