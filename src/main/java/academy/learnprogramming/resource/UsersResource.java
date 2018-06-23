@@ -32,7 +32,8 @@ public class UsersResource {
     ApplicationState applicationState;
     @Inject
     private SecurityUtil securityUtil;
-
+    @Inject
+    JaxRsClient jaxRsClient;
     @Inject
     PersistenceService persistenceService;
 
@@ -48,6 +49,8 @@ public class UsersResource {
     public Response createUser(@Valid ApplicationUser user) {
         persistenceService.saveUser(user);
 
+//         jaxRsClient.checkBreaches(user.getUserEmail());
+        jaxRsClient.checkBreachesRx(user.getEmail());
 
         return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getId().toString()).build())
                 .status(Response.Status.OK).build();

@@ -6,6 +6,9 @@ import academy.learnprogramming.service.PersistenceService;
 import academy.learnprogramming.service.QueryService;
 
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
+import javax.json.bind.JsonbBuilder;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -125,7 +128,18 @@ public class EmployeeResource {
         persistenceService.saveEmployee(employee);
 
         URI uri = uriInfo.getAbsolutePathBuilder().path(employee.getId().toString()).build();
-        return Response.created(uri).status(Response.Status.CREATED).build();
+
+        URI others = uriInfo.getBaseUriBuilder().path(EmployeeResource.class).path(EmployeeResource.class, "getEmployees").build();
+
+//        URI dept = uriInfo.getBaseUriBuilder().path(DepartmentResource.class).path(DepartmentResource.class, "getDepartmentById")
+//                .resolveTemplate("id", employee.getDepartment().getId()).build();
+
+        JsonObjectBuilder links = Json.createObjectBuilder().add("_links", Json.createArrayBuilder().add(Json.createObjectBuilder().add("_others", others.toString())
+                .add("_self", uri.toString()).build()
+        ));
+
+
+        return Response.ok(links.build().toString()).status(Response.Status.CREATED).build();
     }
 
 
