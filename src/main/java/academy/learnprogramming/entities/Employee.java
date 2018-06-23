@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 import javax.json.bind.annotation.JsonbDateFormat;
+import javax.json.bind.annotation.JsonbPropertyOrder;
+import javax.json.bind.config.PropertyOrderStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 

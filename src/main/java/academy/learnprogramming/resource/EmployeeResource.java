@@ -35,6 +35,8 @@ public class EmployeeResource {
 
     @Inject
     Logger logger;
+    @Inject
+    JaxRsClient jaxRsClient;
 
     @Context
     private UriInfo uriInfo;
@@ -137,7 +139,7 @@ public class EmployeeResource {
         JsonObjectBuilder links = Json.createObjectBuilder().add("_links", Json.createArrayBuilder().add(Json.createObjectBuilder().add("_others", others.toString())
                 .add("_self", uri.toString()).build()
         ));
-
+        jaxRsClient.postEmployeeToSSE(employee);
 
         return Response.ok(links.build().toString()).status(Response.Status.CREATED).build();
     }
