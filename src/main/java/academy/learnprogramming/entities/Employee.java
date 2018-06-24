@@ -14,6 +14,7 @@ import java.time.Period;
 import java.util.*;
 import javax.json.bind.annotation.JsonbDateFormat;
 import javax.json.bind.annotation.JsonbPropertyOrder;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.config.PropertyOrderStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -40,7 +41,7 @@ import javax.validation.constraints.*;
         query = "select p from Employee e join e.pastPayslips p where e.id = :employeeId and e.userEmail =:email and p.id =:payslipId and p.userEmail = :email")
 @NamedQuery(name = Employee.GET_PAST_PAYSLIPS, query = "select p from Employee e inner join e.pastPayslips p where e.id = :employeeId and e.userEmail=:email")
 //@Table(name = "Employee", schema = "HR")
-
+@JsonbPropertyOrder(PropertyOrderStrategy.REVERSE)
 @EntityListeners({EmployeeListener.class, AbstractEntityListener.class})
 public class Employee extends AbstractEntity{
 
@@ -93,6 +94,7 @@ public class Employee extends AbstractEntity{
     private Employee reportsTo;
 
     @OneToMany
+    @JsonbTransient
     private Set<Employee> subordinates = new HashSet<>();
 
 
@@ -104,16 +106,19 @@ public class Employee extends AbstractEntity{
 
     @ElementCollection
     @CollectionTable(name = "QUALIFICATIONS", joinColumns = @JoinColumn(name = "EMP_ID") )
+    @JsonbTransient
     private Collection<Qualifications> qualifications = new ArrayList<>();
 
     @ElementCollection
     @Column(name = "NICKY")
+    @JsonbTransient
     private Collection<String> nickNames = new ArrayList<>();
 
     @DecimalMax(value = "60", message = "Age must cannot exceed 60")
     private int age;
 
     @OneToMany( cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JsonbTransient
     private Set<Allowance> employeeAllowances = new HashSet<>();
 
     @OneToOne
@@ -125,6 +130,7 @@ public class Employee extends AbstractEntity{
 
 
     @OneToMany
+    @JsonbTransient
     private Collection<Payslip> pastPayslips = new ArrayList<>();
 
 
@@ -133,6 +139,7 @@ public class Employee extends AbstractEntity{
     @MapKeyColumn(name = "PHONE_TYPE")
     @Column(name = "PHONE_NUMBER")
     @MapKeyEnumerated(EnumType.STRING)
+    @JsonbTransient
     private Map<PhoneType, String> employeePhoneNumbers = new HashMap<>();
 
     @ManyToOne
@@ -140,6 +147,7 @@ public class Employee extends AbstractEntity{
     private Department department;
 
     @ManyToMany(mappedBy = "employees")
+    @JsonbTransient
     private Collection<Project> projects = new ArrayList<>();
 
 

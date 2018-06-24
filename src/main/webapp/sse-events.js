@@ -1,5 +1,6 @@
 if (typeof (EventSource) !== "undefined") {
     var source = new EventSource("http://localhost:8080/payroll/api/v1/sse-path");
+
     source.onmessage = function (evt) {
         document.getElementById("message").innerText += evt.data + "\n"
     };

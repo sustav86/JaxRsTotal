@@ -29,13 +29,14 @@ public class JaxRsClient {
     private Client client;
     WebTarget webTarget;
 
-    private final String haveIBeenPawned = "https://haveibeenpwned.com/api/v2/breachedaccount"; //https://haveibeenpwned.com/api/v2/breachedaccount/bla@bla.com
+    private final String haveIBeenPawned = "https://haveibeenpwned.com/api/v2/breachedaccount"; //https://haveibeenpwned.com/api/v2/breachedaccount/{account}
 
 
     @PostConstruct
     private void init() {
         client = ClientBuilder.newBuilder().connectTimeout(7, TimeUnit.SECONDS)
                 .readTimeout(3, TimeUnit.SECONDS).build();
+//        ClientBuilder.newClient();
 
         webTarget = client.target(haveIBeenPawned);
     }
@@ -61,6 +62,11 @@ public class JaxRsClient {
 
 
         return jsonValues.size();
+    }
+
+    public JsonArray getBreaches(String email) {
+        return webTarget.path("{account}")
+                .resolveTemplate("account", email).request(MediaType.TEXT_PLAIN).get(JsonArray.class);
     }
 
     public void checkBreachesRx(String email) {

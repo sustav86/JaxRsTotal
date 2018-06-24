@@ -60,7 +60,7 @@ public class EmployeeResource {
     @GET //api/v1/employees GET Request
     @Path("employees") //api/v1/employees/employees
 //    @Produces("application/xml")
-    @Secure
+//    @Secure
     public Response getEmployees(@Context HttpHeaders httpHeaders) {
 
         Collection<Employee> employees = new ArrayList<>();
