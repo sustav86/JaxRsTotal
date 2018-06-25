@@ -45,7 +45,7 @@ public class JaxRsClient {
     private void destroy() {
         if (client != null) {
 
-            //Be sure to close the client to prevent resource leakage
+            //Be sure to close the programmatic to prevent resource leakage
 
             client.close();
         }

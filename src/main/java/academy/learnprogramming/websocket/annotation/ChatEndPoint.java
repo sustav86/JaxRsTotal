@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 public class ChatEndPoint {
 
     private static final ConcurrentLinkedQueue<Session> peers = new ConcurrentLinkedQueue<>();
+
     @Inject
     private Logger logger;
 

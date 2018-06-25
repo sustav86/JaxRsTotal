@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Path("client")
+@Path("programmatic")
 @Produces(MediaType.APPLICATION_JSON)
 public class JaxRsClientResource {
 

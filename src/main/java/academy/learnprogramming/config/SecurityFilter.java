@@ -84,7 +84,7 @@ public class SecurityFilter implements ContainerRequestFilter {
             //3. If parsing fails, yell.
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Invalid {0}", token);
-            //Another way to send exceptions to the client
+            //Another way to send exceptions to the programmatic
             reqCtx.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }
 

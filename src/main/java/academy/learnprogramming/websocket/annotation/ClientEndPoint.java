@@ -1,5 +1,9 @@
 package academy.learnprogramming.websocket.annotation;
 
+import academy.learnprogramming.websocket.data.MySimplePojo;
+import academy.learnprogramming.websocket.data.MySimplePojoDecoder;
+import academy.learnprogramming.websocket.data.MySimplePojoEncoder;
+
 import javax.websocket.ClientEndpoint;
 import javax.websocket.EncodeException;
 import javax.websocket.OnMessage;
@@ -16,7 +20,7 @@ public class ClientEndPoint {
     public void processMessage(final Session session, MySimplePojo mySimplePojo) throws IOException, EncodeException {
         Logger logger = Logger.getLogger(ClientEndPoint.class.getName());
 
-        logger.log(Level.INFO, "%%%%%%%%%%% My simple pojo received on the client %%%%%%%%%%%%");
+        logger.log(Level.INFO, "%%%%%%%%%%% My simple pojo received on the programmatic %%%%%%%%%%%%");
         logger.log(Level.INFO, mySimplePojo.toString());
         session.getBasicRemote().sendObject(mySimplePojo);
     }
